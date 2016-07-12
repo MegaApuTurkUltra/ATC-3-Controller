@@ -101,6 +101,7 @@ body {
 
 #input #bot-code {
     flex: 1;
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: auto;
     resize: horizontal;
 }
