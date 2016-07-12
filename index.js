@@ -315,7 +315,8 @@ function runLine(bot, line){
                             for(let checkTagBot of bots){
                                 if(checkTagBot.name != name) {
                                     for(let codeLine of checkTagBot.code) {
-                                        if(codeLine.startsWith("TAG " + name)) tagCount++;
+                                        let codeLineTokens = codeLine.split(" ");
+                                        if(codeLineTokens[0] == "TAG" && codeLineTokens[1] == name) tagCount++;
                                     }
                                 }
                             }
