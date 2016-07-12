@@ -400,7 +400,7 @@ function parseValue(bot, param) {
         // return a parsed and rebuilt version of the line, in case
         // anybody's strategy is actually to read lines
         let tokens = line.split(" ");
-        if(line[0] == "TAG") return "TAG";
+        if(line[0] == "TAG") return "TAG " + bot.name;
         if(line[0] == "SET") {
             for(var i = 3; i < tokens.length; i++) delete tokens[i];
             return tokens.join(" ");
