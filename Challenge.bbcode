@@ -54,7 +54,7 @@ Notes:
 
 The game will be played for 5,000 turns. Then, the total points for each bot type are added up, and the submission with the most combined points wins! (I may potentially decide to average over multiple matches, or play noncompetitive rounds with a few bots I've developed :P)
 
-[big][b][u]Acessing Data[/u][/b][/big]
+[big][b][u]Accessing Data[/u][/b][/big]
 Number literals are accepted in lines. String literals are not (use lines instead).
 Putting the name of a variable somewhere where the syntax accepts it will retrieve the value of that variable for the bot. Thus
 [code]
@@ -85,6 +85,7 @@ SET *@10 @10                 copy my line 10 to opponent's line 10
 SET **EXECUTION_POINTER 10   set the opponent's opponent's execution pointer to 10 (it may be you!)
 IF *@12 EQUALS @12 5 6       if opponent's line 12 matches mine, run line 5, otherwise run line 6
 [/code]
+Note: Accessing other bot variables will return -1 if there is no bot there. You can use this in an IF to test for bots to hack.
 
 [big][b][u]Using TAG[/u][/b][/big]
 When your code has the TAG instruction in it, the instruction is implicitly associated with your bot type. (So every submission that wants to win should have a tag :P). You can have multiple TAG instructions if you want.
@@ -103,6 +104,15 @@ bot2:
 3  TAG
 [/code]
 If bot1 successfully "hacks" bot2, bot2 will now be spreading bot1's tags and increasing bot1's points.
+
+[big][b][u]Using PROTECT[/u][/b][/big]
+PROTECT can either protect a variable or a line specified by @. You can only protect your own variables and lines. Protects do stack, but do note that if you spend too much time stacking protects you're not going to have enough time to move! :P
+[code]
+PROTECT EXECUTION_POINTER     protect exec ptr
+PROTECT @2                    protect line 2
+PROTECT @EXECUTION_POINTER    protect next line to execute
+PROTECT @*DATA1               protect line specified by enemy DATA1
+[/code]
 
 [big][b][u]Guidelines for Submitting[/u][/b][/big]
 Usually on PPCG king-of-the-hill challenges, bots have unique strategies and fun names. Make your best effort to do both :P
