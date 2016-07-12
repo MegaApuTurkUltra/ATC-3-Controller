@@ -347,7 +347,7 @@ function runLine(bot, line){
             .split(" ")
             .filter(e => e.length > 0)
             .map(item => item.trim().toUpperCase());
-        if(newLine.length > 0) {
+        if(newLine.length > 0 && newLine[0] != "IF") {
             runLine(bot, newLine);
         }
     } else if(line[0] == "MOVE") {
