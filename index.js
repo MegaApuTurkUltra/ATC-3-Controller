@@ -27,6 +27,7 @@ let selectedBot = null;
 
 function loadBot(name, codeText) {
     name = name.replace(/[^a-zA-Z0-9\-_]+/g, "");
+    if(name == "") name = "UnnamedBot" + Math.random();
     
     for (let bot of registeredBots) {
         if (bot.name == name) {
