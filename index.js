@@ -87,7 +87,7 @@ function loadBot(name, codeText) {
 
     dom.querySelector(".delete").onclick = function() {
         let botName = this.parentElement.id;
-        if (confirm("Delete" + botName + "?")) {
+        if (confirm("Delete " + botName + "?")) {
             this.parentElement.remove();
             for (let i = 0; i < registeredBots.length; i++) {
                 if (registeredBots[i].name == botName) {
