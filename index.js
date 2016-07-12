@@ -412,19 +412,22 @@ function parseValue(bot, param) {
         // return a parsed and rebuilt version of the line, in case
         // anybody's strategy is actually to read lines
         let tokens = line.split(" ");
-        if(line[0] == "TAG") return "TAG " + bot.name;
-        if(line[0] == "SET") {
+        if(tokens[0] == "TAG") {
+            for(var i = 2; i < tokens.length; i++) delete tokens[i];
+            return tokens.join(" ");
+        }
+        if(tokens[0] == "SET") {
             for(var i = 3; i < tokens.length; i++) delete tokens[i];
             return tokens.join(" ");
         }
-        if(line[0] == "IF") {
+        if(tokens[0] == "IF") {
             for(var i = 6; i < tokens.length; i++) delete tokens[i];
             return tokens.join(" ");
         }
-        if(line[0] == "MOVE") {
+        if(tokens[0] == "MOVE") {
             return "MOVE";
         }
-        if(line[0] == "PROTECT") {
+        if(tokens[0] == "PROTECT") {
             for(var i = 2; i < tokens.length; i++) delete tokens[i];
             return tokens.join(" ");
         }
