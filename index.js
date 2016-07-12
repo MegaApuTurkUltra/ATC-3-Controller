@@ -310,8 +310,17 @@ function runLine(bot, line){
                         // only execute the tag if the line didn't already contain that bot's tag
                         if(value.split(" ")[0] == "TAG" && thisBot != bot && bot.code[index] != value) {
                             let name = value.split(" ")[1];
-                            if(!tags.hasOwnProperty(name)) tags[name] = 0;
-                            tags[name]++;
+                            
+                            let tagCount = 0;
+                            for(let checkTagBot of bots){
+                                if(checkTagBot.name != name) {
+                                    for(let codeLine of checkTagBot.code) {
+                                        if(codeLine.startsWith("TAG " + name)) tagCount++;
+                                    }
+                                }
+                            }
+                            
+                            tags[name] = tagCount;
                         }
                         
                         bot.code[index] = value;
