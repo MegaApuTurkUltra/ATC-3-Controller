@@ -34,7 +34,7 @@ function loadBot(name, codeText) {
             if(!confirm("Replace " + name + "?"))
                 return;
             else {
-                registeredBots.splice(registeredBots.indexof(bot), 1);
+                registeredBots.splice(registeredBots.indexOf(bot), 1);
                 break;
             }
         }
