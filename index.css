@@ -1,0 +1,106 @@
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+}
+
+#screen-container {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+}
+
+#screen {
+    position: absolute;
+    top: calc(50% - 250px);
+    left: calc(50% - 250px);
+    border: 1px solid blue;
+}
+
+#status {
+    height: 100%;
+    border-left: 3px solid black;
+    padding: 1em;
+    box-sizing: border-box;
+    overflow-y: auto;
+    width: 300px;
+}
+
+.template {
+    display: none;
+}
+
+#list {
+    display: table;
+    padding: 1em;
+}
+
+.row {
+    display: table-row;
+}
+
+.row>div {
+    display: table-cell;
+    padding: 0.2em;
+}
+
+.color {
+    width: 1em;
+    height: 1em;
+}
+
+#input {
+    background: white;
+    border: 1px solid black;
+    position: fixed;
+    z-index: 9999;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    padding: 1em;
+    display: none;
+    min-width: 50%;
+    min-height: 50%;
+    max-width: 90%;
+    max-height: 90%;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+
+#input.active {
+    display: flex;
+}
+
+#input #code-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#input #code-container-inner {
+    display: flex;
+    flex-direction: row;
+}
+
+#input #bot-code, #input #line-numbers {
+    font-family: monospace;
+    font-size: 10pt;
+    align-self: stretch;
+}
+
+#input #line-numbers {
+    border-top: 1px solid transparent;
+    padding-bottom: 1em;
+    padding-top: 0.2em;
+}
+
+#input #bot-code {
+    flex: 1;
+    overflow: hidden;
+    resize: horizontal;
+}
