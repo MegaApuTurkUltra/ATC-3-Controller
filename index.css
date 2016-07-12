@@ -67,8 +67,8 @@ body {
     display: none;
     min-width: 50%;
     min-height: 50%;
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 95%;
+    max-height: 95%;
     box-sizing: border-box;
     flex-direction: column;
 }
