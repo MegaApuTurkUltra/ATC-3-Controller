@@ -222,7 +222,7 @@ function turn() {
 
 document.querySelector("#run").onclick = function(){
     running = !running;
-    if(running && bots.length == 0){
+    if(running && registeredBots.length == 0){
         cycles = 0;
         running = false;
     }
