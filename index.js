@@ -22,6 +22,8 @@ let cycles = 0;
 
 let zaps = [];
 
+let runningBot = null;
+
 let displayLocked = false;
 let selectedBot = null;
 
@@ -272,6 +274,7 @@ function runBot(bot) {
     
     bot.variables.EXECUTION_POINTER++;
     
+    runningBot = bot;
     runLine(bot, line);
     
     bot.variables.RANDOM = Math.floor(Math.random() * 33);
@@ -304,7 +307,7 @@ function runLine(bot, line){
                 if(param.startsWith("@")) {
                     let index = parseInt(parseValue(thisBot, param.substring(1))) - 1;
                     if(!isNaN(index) && index < bot.code.length && index > -1) {
-                        if(hasProtect(bot, "line", index)) { return; }
+                        if(bot.name != runningBot.name && hasProtect(bot, "line", index)) { return; }
                         
                         value = "" + value;
                         // only execute the tag if the line didn't already contain that bot's tag
@@ -332,7 +335,7 @@ function runLine(bot, line){
                         }
                     }
                 } else if(bot.variables.hasOwnProperty(param)) {
-                    if(hasProtect(bot, "variable", param)) { return; }
+                    if(bot.name != runningBot.name && hasProtect(bot, "variable", param)) { return; }
                     bot.variables[param] = value;
                 }
             }
