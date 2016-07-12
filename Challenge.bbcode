@@ -1,0 +1,148 @@
+Welcome to the second Advanced Topics Challenge! The winner of the challenge, as per (recently begun) tradition, will be allowed to place this beautiful Round 3 medal in their signature:
+
+[url=https://scratch.mit.edu/discuss/topic/208449][img]http://u.cubeupload.com/PullJosh/3.png[/img][/url]
+
+The winner of the challenge will then be able to either create the next challenge or select someone else to do it for them.
+Previous ATCs: [url=https://scratch.mit.edu/discuss/topic/206784/]#1[/url] | [url=https://scratch.mit.edu/discuss/topic/208146/]#2[/url]
+
+This is inspired by a PPCG challenge I can't find anymore.
+
+[b]Link to the controller for this challenge: http://aputurk.tk/ATC-3-Controller/[/b]
+
+[big][b][u]The Goal[/u][/b][/big]
+Get as many points as possible by hacking bots!
+
+[big][b][u]Quick Facts[/u][/b][/big]
+[list]
+[*] Challenge type: King-of-the-hill (see the codegolf.stackexchange.com tag for examples)
+[*] Language: MATU's custom bot language
+[*] Time frame: ~1 week (final submissions due Monday July 18, 11:59:59 PM)
+[*] Winner: Whoever's bots have the most combined tags after final submissions are run
+[*] Submission modifications allowed: yes (see constraints)
+[*] Multiple submissions allowed: yes (see constraints)
+[/list]
+
+[big][b][u]The Field[/u][/b][/big]
+Bots play on a 100x100 grid. Only one bot may occupy a space at a time. Bots move 1 step at a time, either North, South, East, or West. If a bot tries to move into another bot's space, nothing happens. If a bot moves off the edges of the field, they are wrapped onto the other side.
+
+[big][b][u]Playing The Game[/u][/b][/big]
+On start, 10 bots for each submission are placed randomly on the field. (Number may change in the future)
+
+Bot programs have the following variables available (separate for each bot instance)
+[list]
+[*] DATA1: Custom use
+[*] DATA2: Custom use
+[*] EXECUTION_POINTER: Which line of the code to execute next. Defaults to the next line mod 32. 1-indexed
+[*] DIRECTION: Which direction the bot is facing. 0: N, 1: E, 2: S, 3: W. Always taken mod 4
+[*] RANDOM: A random integer from 1 to 32 inclusive
+[/list]
+Additionally, data may be stored on program lines as invalid instructions are ignored.
+[b]Programs are limited to 32 lines[/b]
+
+On each turn, bots will run their next line of code (the execution order of bots each turn is randomized). This can be one of:
+[list]
+[*] MOVE. This moves the bot in DIRECTION. Use SET DIRECTION RANDOM before to move in a random direction.
+[*] SET <VAR|LINE> VALUE. This sets a variable or line of code
+[*] IF <VAR|LINE|VALUE> <EQUALS|LESSTHAN|GREATERTHAN> <VAR|LINE|VALUE> <LINENUMBER1> <LINENUMBER2>. Executes the line numbered LINENUMBER1 if the condition is met, otherwise executes LINENUMBER2. Does not affect EXECUTION_POINTER by itself. Example: IF DATA1 LESSTHAN 5 10 11 if data1 is less than 5, run line 10, otherwise run line 11
+[*] PROTECT <VAR|LINE>. Protects the specified variable or line from the next attempt to set it. Protects do stack, and are effective against the bot itself. Example: PROTECT @DATA1 protects the line specified by DATA1. PROTECT EXECUTION_POINTER protects the execution pointer.
+[*] TAG. Gets you points.
+[/list]
+Notes:
+ - Parameters are space-separated.
+ - Once an instruction has all of its parameters, anything afterwards will be ignored (it's a comment)
+ - Any lines that don't start with a valid instruction name are ignored
+
+The game will be played for 5,000 turns. Then, the total points for each bot type are added up, and the submission with the most combined points wins! (I may potentially decide to average over multiple matches, or play noncompetitive rounds with a few bots I've developed :P)
+
+[big][b][u]Acessing Data[/u][/b][/big]
+Number literals are accepted in lines. String literals are not (use lines instead).
+Putting the name of a variable somewhere where the syntax accepts it will retrieve the value of that variable for the bot. Thus
+[code]
+SET EXECUTION_POINTER 1
+[/code]
+is an infinite loop.
+
+Using @ before a value of some sort will retrieve the line specified by the value (lines are 1-indexed).
+[code]
+@10        line 10
+@RANDOM    a random line
+@@10       line specified by the number on line 10
+[/code]
+
+Three arithmetic operators are parsed before anything else in a value specification (precedence is %-+)
+[code]
+SET EXECUTION_POINTER 2+2        go to line 4
+SET EXECUTION_POINTER 10-6       same
+SET EXECUTION_POINTER RANDOM%4   mod random number
+[/code]
+Operators may not have spaces before or after them, otherwise the parser will count it as 2 different tokens.
+
+[i]Here's the key part[/i]. You'll want to pay attention :P
+The operator * switches the scope of access to an adjacent bot. Adjacent is defined as any bot not of your type in the DIRECTION your bot is facing. If the closest bot in that direction is of your type, it is as if there is no bot in that direction. If there is no bot found, any operation with the * operator does nothing.
+[code]
+SET *EXECUTION_POINTER 10    set opponent's execution pointer to 10
+SET *@10 @10                 copy my line 10 to opponent's line 10
+SET **EXECUTION_POINTER 10   set the opponent's opponent's execution pointer to 10 (it may be you!)
+IF *@12 EQUALS @12 5 6       if opponent's line 12 matches mine, run line 5, otherwise run line 6
+[/code]
+
+[big][b][u]Using TAG[/u][/b][/big]
+When your code has the TAG instruction in it, the instruction is implicitly associated with your bot type. (So every submission that wants to win should have a tag :P). You can have multiple TAG instructions if you want.
+
+When you copy your TAG instruction to another bot (not of your type, since you won't find any of those), your bot type gets a point. Also, that bot now has [i]your[/i] tag. That means if you manage to nab the line where it stores its own tag, you can get it to spread your tag instead! Whenever [i]any[/i] bot copies [i]your[/i] tag, your bot type gets a point.
+For clarity I'll be using line numbers in the following code
+bot1:
+[code]
+1  SET *@3 @2
+2  TAG
+[/code]
+bot2:
+[code]
+1  MOVE
+2  SET *@RANDOM @3
+3  TAG
+[/code]
+If bot1 successfully "hacks" bot2, bot2 will now be spreading bot1's tags and increasing bot1's points.
+
+[big][b][u]Guidelines for Submitting[/u][/b][/big]
+Usually on PPCG king-of-the-hill challenges, bots have unique strategies and fun names. Make your best effort to do both :P
+For examples, you can browse [url=http://codegolf.stackexchange.com/questions/tagged/king-of-the-hill]king-of-the-hill tagged posts[/url].
+
+[b]Making changes to your submission:[/b] Changes are allowed before the deadline with the following constraints:
+ - The overall strategy should not be overly different. For example, a bot that has a primary strategy of protecting all of its lines and variables should retain that overall strategy in modifications.
+ - You should add your modification to a new code block in the post containing the original submission. Keep all revisions. (This is just for my ease of browsing).
+
+[b]Multiple submissions:[/b] If you see a bot that you think you could improve, or think of a new strategy, you can make another submission with the following constraints:
+ - If it's a derivative or uses pieces of code from somebody else, give credit
+ - If it's specifically designed to interact with somebody else's bot, give credit
+ - Separate submissions should each be in their own post and have their own unique name
+
+Submit in the following format:
+[code]
+[big]Submission: <Name>[/big]
+[code]
+Bot code goes here
+[/code]
+
+Revision 1
+[code]
+Bot code goes here
+[/code]
+
+etc
+[/code]
+
+[big][b][u]Example[/u][/b][/big]
+[big]Submission: BasicBot[/big]
+[code]
+SET DIRECTION RANDOM
+MOVE
+SET EXECUTION_POINTER 1   repeat
+TAG                       maybe this will magically get somewhere :P
+[/code]
+
+[big][b][u]Loopholes and Control Program Exploits[/u][/b][/big]
+[quote]This is a challenge for programmers, not lawyers. If you find a loophole or an exploit in the control program (very likely), let me know. Nobody will have fun if you exploit it.[/quote]
+Additionally, if there's something that you think may be unintended behavior of the control program, and it's hindering your ability to make a submission, let me know too :P
+
+[b]Good luck and may the best l33t haxx0r win! :D[/b]
