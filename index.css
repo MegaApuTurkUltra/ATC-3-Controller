@@ -55,6 +55,12 @@ body {
     height: 1em;
 }
 
+.name {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #input {
     background: white;
     border: 1px solid black;

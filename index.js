@@ -37,10 +37,13 @@ function loadBot(name, codeText) {
                 return;
             else {
                 registeredBots.splice(registeredBots.indexOf(bot), 1);
+                document.querySelector("#" + name).remove();
                 break;
             }
         }
     }
+    
+    cycles = 0;
 
     let bot = {
         x: 0,
@@ -120,6 +123,18 @@ document.querySelector("#input .nope").onclick = function(){
     document.querySelector("#input").classList.remove("active");
 }
 
+function dragover_handler(ev) {
+    ev.preventDefault();
+    ev.dataTransfer.dropEffect = "move"
+}
+function drop_handler(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    loadBot("dropped" + Math.random(), data);
+}
+
+document.body.addEventListener('dragover', dragover_handler);
+document.body.addEventListener('drop', drop_handler);
 
 document.querySelector("#bot-code").onkeydown = function(e){
     let newLines = this.value.split(/\r?\n/g).length;
@@ -387,32 +402,9 @@ function hasProtect(bot, type, value) {
     return false;
 }
 
-function parseValue(bot, param) {
-    let value = 0;
-    let parts = param.split("+");
-    if(parts.length > 1) {
-        return parseValue(bot, parts[0]) + parseValue(bot, parts[1]);
-    }
-    parts = param.split("-");
-    if(parts.length > 1) {
-        return parseValue(bot, parts[0]) - parseValue(bot, parts[1]);
-    }
-    parts = param.split("%");
-    if(parts.length > 1) {
-        return parseValue(bot, parts[0]) % parseValue(bot, parts[1]);
-    }
-    
-    if(param.startsWith("*")) {
-        let otherBot = findBotInDirection(bot);
-        if(otherBot) {
-            return parseValue(otherBot, param.substring(1));
-        } else {
-            return -1;
-        }
-    }
-    
-    if(param.startsWith("@")) {
-        let line = bot.code[parseInt(parseValue(bot, param.substring(1))) - 1] || "";
+function parseValue(bot, param) {    
+    function getLine(bot, param) {
+        let line = bot.code[parseInt(parseValue(runningBot, param)) - 1] || "";
         // return a parsed and rebuilt version of the line, in case
         // anybody's strategy is actually to read lines
         let tokens = line.split(" ");
@@ -438,12 +430,36 @@ function parseValue(bot, param) {
         return line;
     }
     
-    if(bot.variables.hasOwnProperty(param)) {
-        value = bot.variables[param];
-    } else if(param.match(/^[0-9\-]+$/)) {
-        value = parseInt(param);
+    function getOtherBotValue(bot, param) {
+        let otherBot = findBotInDirection(bot);
+        if(otherBot) {
+            return parseValue(otherBot, param);
+        } else {
+            return -1;
+        }
     }
-    return value;
+    
+    // capture variables in anonymous function
+    return (function(bot, param){
+        // yay some epic hacks
+        // totally unsafe
+        param = param.replace(/[^A-Z0-9_@\*\(\)\+\-%]+/gi, "");
+        param = param.replace(/@([A-Z_0-9\*@]+)|\*([A-Z_0-9@\*]+)/gi, function(match, p1, p2){
+            if(match.startsWith("@")) {
+                return "getLine(bot, \"" + p1 + "\")";
+            } else {
+                return "getOtherBotValue(bot, \"" + p2 + "\")";
+            }
+        });
+        
+        var DATA1 = bot.variables.DATA1;
+        var DATA2 = bot.variables.DATA2;
+        var EXECUTION_POINTER = bot.variables.EXECUTION_POINTER;
+        var RANDOM = bot.variables.RANDOM;
+        var DIRECTION = bot.variables.DIRECTION;
+        
+        return eval(param);
+    })(bot, param);
 }
 
 function findBotInDirection(bot) {
