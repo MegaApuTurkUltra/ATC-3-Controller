@@ -29,7 +29,7 @@ let selectedBot = null;
 
 function loadBot(name, codeText) {
     name = name.replace(/[^a-zA-Z0-9\-_]+/g, "");
-    if(name == "") name = "UnnamedBot" + Math.random();
+    if(name == "") name = "UnnamedBot" + Math.floor(Math.random()*1000);
     
     for (let bot of registeredBots) {
         if (bot.name == name) {
@@ -130,7 +130,7 @@ function dragover_handler(ev) {
 function drop_handler(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    loadBot("dropped" + Math.random(), data);
+    loadBot("dropped" + Math.floor(Math.random() * 1000), data);
 }
 
 document.body.addEventListener('dragover', dragover_handler);
