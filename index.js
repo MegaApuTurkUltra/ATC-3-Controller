@@ -444,6 +444,8 @@ function parseValue(bot, param) {
         // yay some epic hacks
         // totally unsafe
         param = param.replace(/[^A-Z0-9_@\*\(\)\+\-%]+/gi, "");
+        param = param.replace(/@\(/g, "getLine(bot,");
+        param = param.replace(/\*\(/g, "getOtherBotValue(bot,");
         param = param.replace(/@([A-Z_0-9\*@]+)|\*([A-Z_0-9@\*]+)/gi, function(match, p1, p2){
             if(match.startsWith("@")) {
                 return "getLine(bot, \"" + p1 + "\")";
@@ -457,9 +459,8 @@ function parseValue(bot, param) {
         var EXECUTION_POINTER = bot.variables.EXECUTION_POINTER;
         var RANDOM = bot.variables.RANDOM;
         var DIRECTION = bot.variables.DIRECTION;
-        
         return eval(param);
-    })(bot, param);
+    })(bot, param + "");
 }
 
 function findBotInDirection(bot) {
