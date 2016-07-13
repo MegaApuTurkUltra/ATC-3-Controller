@@ -8,6 +8,7 @@ Previous ATCs: [url=https://scratch.mit.edu/discuss/topic/206784/]#1[/url] | [ur
 This is inspired by a PPCG challenge I can't find anymore.
 
 [b]Link to the controller for this challenge: http://aputurk.tk/ATC-3-Controller/[/b]
+GitHub repo: https://github.com/MegaApuTurkUltra/ATC-3-Controller
 
 [big][b][u]The Goal[/u][/b][/big]
 Get as many points as possible by hacking bots!
@@ -44,7 +45,7 @@ On each turn, bots will run their next line of code (the execution order of bots
 [*] MOVE. This moves the bot in DIRECTION. Use SET DIRECTION RANDOM before to move in a random direction.
 [*] SET <VAR|LINE> VALUE. This sets a variable or line of code
 [*] IF <VAR|LINE|VALUE> <EQUALS|LESSTHAN|GREATERTHAN> <VAR|LINE|VALUE> <LINENUMBER1> <LINENUMBER2>. Executes the line numbered LINENUMBER1 if the condition is met, otherwise executes LINENUMBER2. Does not affect EXECUTION_POINTER by itself. Example: IF DATA1 LESSTHAN 5 10 11 if data1 is less than 5, run line 10, otherwise run line 11
-[*] PROTECT <VAR|LINE>. Protects the specified variable or line from the next attempt to set it. Protects do stack, and are effective against the bot itself. Example: PROTECT @DATA1 protects the line specified by DATA1. PROTECT EXECUTION_POINTER protects the execution pointer.
+[*] PROTECT <VAR|LINE>. Protects the specified variable or line from the next attempt to set it. Protects do stack, and do [i]not[/i] prevent the bot itself from writing. Example: PROTECT @DATA1 protects the line specified by DATA1. PROTECT EXECUTION_POINTER protects the execution pointer.
 [*] TAG. Gets you points.
 [/list]
 Notes:
@@ -76,6 +77,10 @@ SET EXECUTION_POINTER 10-6       same
 SET EXECUTION_POINTER RANDOM%4   mod random number
 [/code]
 Operators may not have spaces before or after them, otherwise the parser will count it as 2 different tokens.
+Parentheses are also supported
+[code]
+SET EXECUTION_POINTER (RANDOM+2)%3+1    exactly what it looks like :P
+[/code]
 
 [i]Here's the key part[/i]. You'll want to pay attention :P
 The operator * switches the scope of access to an adjacent bot. Adjacent is defined as any bot not of your type in the DIRECTION your bot is facing. If the closest bot in that direction is of your type, it is as if there is no bot in that direction. If there is no bot found, any operation with the * operator does nothing.
@@ -138,7 +143,7 @@ Bot code goes here
 
 Revision 1
 [code]
-Bot code goes here
+If you have a revision, it goes here
 [/code]
 
 etc
