@@ -467,14 +467,14 @@ function findBotInDirection(bot) {
     bot.variables.DIRECTION = bot.variables.DIRECTION % 4;
     let vertical = bot.variables.DIRECTION  == 0 || bot.variables.DIRECTION == 2;
     for(let i = 0, j = vertical ? bot.y : bot.x; i < 99; i++){
-        if(!vertical && field[bot.x][j] && field[bot.x][j].type == "bot") {
-            if(field[bot.x][j].bot.name == bot.name) return null;
-            return field[bot.x][j].bot;
-        }
-        
-        if(vertical && field[j][bot.y] && field[j][bot.y].type == "bot") {
+        if(!vertical && field[j][bot.y] && field[j][bot.y].type == "bot") {
             if(field[j][bot.y].bot.name == bot.name) return null;
             return field[j][bot.y].bot;
+        }
+        
+        if(vertical && field[bot.x][j] && field[bot.x][j].type == "bot") {
+            if(field[bot.x][j].bot.name == bot.name) return null;
+            return field[bot.x][j].bot;
         }
         
         if(bot.variables.DIRECTION == 0 || bot.variables.DIRECTION == 3) {
