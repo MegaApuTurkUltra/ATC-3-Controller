@@ -466,7 +466,15 @@ function parseValue(bot, param) {
 function findBotInDirection(bot) {
     bot.variables.DIRECTION = bot.variables.DIRECTION % 4;
     let vertical = bot.variables.DIRECTION  == 0 || bot.variables.DIRECTION == 2;
-    for(let i = 0, j = vertical ? bot.y : bot.x; i < 99; i++){
+    let j = vertical ? bot.y : bot.x;
+    if(bot.variables.DIRECTION == 0 || bot.variables.DIRECTION == 3) {
+        j--;
+    } else {
+        j++;
+    }
+    if(j > 99) j = 0;
+    if(j < 0) j = 99;
+    for(let i = 0; i < 99; i++){
         if(!vertical && field[j][bot.y] && field[j][bot.y].type == "bot") {
             if(field[j][bot.y].bot.name == bot.name) return null;
             return field[j][bot.y].bot;
